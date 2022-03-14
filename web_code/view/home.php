@@ -3,12 +3,14 @@
 //Date : 14.03.2022
 //Description : Contenu de la page home
 ?>
-<form action="" method="post">
-    <input type="submit" value="Eteindre">
 
+<form action="?state=0" method="post">
+    <input type="submit" value="Eteindre">
+</form>
+<form action="?state=1" method="post">
+    <input type="submit" value="Allumer">
 </form>
 
 
 
-<?php
-?>
+<?= $state?>
