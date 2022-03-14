@@ -11,3 +11,7 @@ CREATE TABLE t_switch (
 
 INSERT INTO `t_switch` (`idSwitch`, `swiValue`) VALUES
 (1,1);
+
+DROP USER IF EXISTS 'arduino'@'%';
+CREATE USER 'arduino'@'%' IDENTIFIED BY 'admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `db_arduino`.* TO 'arduino'@'%';

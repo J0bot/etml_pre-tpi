@@ -6,7 +6,7 @@
 //Ce tableau va contenir les infos de connection
 $login = array(
      "ip" => "172.16.0.7",
-     "user" => "root",
+     "user" => "arduino",
      "pass" => "admin",
      "db" => "db_arduino",
 );
