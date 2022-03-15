@@ -33,8 +33,8 @@
                 //Ce echo servait de debug
                 //echo "On est dans la matrice";
             }
-                //Si on arrive pas à se connecter ça va nous trow un message d'erreur
-                catch(PDOException $e){
+            //Si on arrive pas à se connecter ça va nous trow un message d'erreur
+            catch(PDOException $e){
                 echo "Impossible de se connecter à la base de données, avec le code d'erreur : \n";
                 echo $e->getMessage();
             }

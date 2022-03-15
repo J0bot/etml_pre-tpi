@@ -3,6 +3,7 @@
 //Date : 14.03.2022
 //Description : Contenu de la page home
 ?>
+<?= $state?>
 
 <form action="?state=0" method="post">
     <input type="submit" value="Eteindre">
@@ -12,5 +13,3 @@
 </form>
 
 
-
-<?= $state?>
