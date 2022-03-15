@@ -32,7 +32,7 @@ void setup()
     IPAddress ardIpAddress = WiFi.localIP();
     Serial.println(ardIpAddress);
 
-    char server[] = "172.16.0.55";
+    char server[] = "172.16.0.7";
 
     if (client.connect(server, 80)) {
 
@@ -40,9 +40,9 @@ void setup()
 
         // Make a HTTP request:
 
-        client.println("GET / HTTP/1.1");
+        client.println("GET /?state=2 HTTP/1.1");
 
-        client.println("Host: SRV01");
+        client.println("Host: arduino-web");
 
         client.println("Connection: close");
 
@@ -73,11 +73,12 @@ void loop() {
 
     // from the server, read them and print them:
 
+    
     while (client.available()) {
 
         char c = client.read();
 
-        Serial.write(c);        
+        Serial.write(c);
     }
 
     // if the server's disconnected, stop the client:

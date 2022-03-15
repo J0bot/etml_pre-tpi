@@ -16,7 +16,6 @@ $delay = 0;
 if(isset($_GET["state"]))
 {
     $state = $conn->changeState($_GET["state"]);
-    
 }
 
 
