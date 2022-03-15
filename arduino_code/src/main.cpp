@@ -1,100 +1,121 @@
-#include <Arduino.h>
-
-
+// Import required libraries
 #include <SPI.h>
 #include <WiFiNINA.h>
 
 
-#include "secrets.h"
+#include <aREST.h>
+
+// Create aREST instance
+aREST rest = aREST();
+
+char ssid[] = "NETGEAR96";      // your network SSID (name)
+char pass[] = "freshviolin032";   // your network password
+int keyIndex = 0;                 // your network key Index number (needed only for WEP)
+
+int status = WL_IDLE_STATUS;
+
+WiFiServer restServer(80);
+
+// Custom function accessible by the API
+int ledControl(String command) {
+
+    Serial.println(command);
+    
+    // Get state from command
+    int state = command.toInt();
+
+    digitalWrite(6,state);
 
 
-//Tout ce qui concerne le wifi
-char ssid[] = SECRET_SSID;        // your network SSID (name)
-char pass[] = SECRET_PASS;      // your network password (use for WPA, or use as key for WEP)
-int status = WL_IDLE_STATUS;     // le status du wifi
+    delay(state);
 
-//Variable client de la classe WiFiClient
-WiFiClient client;
+    
+    return 1;
+}
 
-void setup()
+void printWifiStatus() {
+    // print the SSID of the network you're attached to:
+    Serial.print("SSID: ");
+    Serial.println(WiFi.SSID());
+
+    // print your WiFi shield's IP address:
+    IPAddress ip = WiFi.localIP();
+    Serial.print("IP Address: ");
+    Serial.println(ip);
+
+    IPAddress subnet = WiFi.subnetMask();
+    Serial.print("Netmask: ");
+    Serial.println(subnet);
+
+    IPAddress gateway = WiFi.gatewayIP();
+    Serial.print("Gateway: ");
+    Serial.println(gateway);
+
+    // print the received signal strength:
+    long rssi = WiFi.RSSI();
+    Serial.print("signal strength (RSSI):");
+    Serial.print(rssi);
+    Serial.println(" dBm");
+}
+
+
+void setup(void)
 {
-    Serial.begin(9600);
-    pinMode(2, OUTPUT);
 
-    // Ici on va essayer de se connecter au wifi
+    pinMode(6,OUTPUT);
+    pinMode(7,OUTPUT);
+
+    // Function to be exposed
+    rest.function("led",ledControl);
+
+    // Give name and ID to device
+    rest.set_id("008");
+    rest.set_name("arduinou");
+
+    // Start Serial
+    Serial.begin(9600);
+
+    while (!Serial) {
+        ; // wait for serial port to connect. Needed for native USB port only
+    }
+
+    // check for the presence of the shield:
+    if (WiFi.status() == WL_NO_SHIELD) {
+        Serial.println("WiFi shield not present");
+        // don't continue:
+        while (true);
+    }
+
+    // attempt to connect to Wifi network:
     while ( status != WL_CONNECTED) {
+        Serial.print("Attempting to connect to SSID: ");
+        Serial.println(ssid);
+        // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
         status = WiFi.begin(ssid, pass);
-        Serial.println("Trying connection to wifi...");
-        // wait 5 seconds for connection to the wifi
+
+        // wait 10 seconds for connection:
         delay(5000);
     }
 
-    IPAddress ardIpAddress = WiFi.localIP();
-    Serial.println(ardIpAddress);
+    Serial.println();
 
-    char server[] = "172.16.0.7";
+    // you're connected now, so print out the status:
+    printWifiStatus();
 
-    if (client.connect(server, 80)) {
+    // Start server
+    restServer.begin();
+    Serial.println(F("Listening for connections..."));
 
-        Serial.println("connected to server");
-
-        // Make a HTTP request:
-
-        client.println("GET /?state=2 HTTP/1.1");
-
-        client.println("Host: arduino-web");
-
-        client.println("Connection: close");
-
-        client.println();
-
-    }
-
+    // Enable watchdog
+    //wdt_enable(WDTO_4S);
 }
-
-void ledFadeInAndOut()
-{
-    for(int i=0; i<255; i++){
-    analogWrite(2, i);
-    delay(5);
-    }
-    for(int i=255; i>0; i--){
-        analogWrite(2, i);
-        delay(5);
-    }
-
-}
-
 
 void loop() {
 
-    //ledFadeInAndOut();
-    // if there are incoming bytes available
-
-    // from the server, read them and print them:
-
-    
-    while (client.available()) {
-
-        char c = client.read();
-
-        Serial.write(c);
-    }
-
-    // if the server's disconnected, stop the client:
-
-    if (!client.connected()) {
-
-        Serial.println();
-
-        Serial.println("disconnecting from server.");
-
-        client.stop();
-
-        // do nothing forevermore:
-
-        while (true);
-
-    }
+    // Handle REST calls
+    WiFiClient client = restServer.available();
+    rest.handle(client);
 
 }
+
+
