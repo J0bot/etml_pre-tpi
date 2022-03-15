@@ -3,6 +3,7 @@
 //Date : 14.03.2022
 //Description : view de l'appli
 ?>
+<?php /*
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,3 +15,4 @@
     
 </body>
 </html>
+*/ ?>
