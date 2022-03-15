@@ -5,10 +5,10 @@
 ?>
 <?= $state?>
 
-<form action="?state=0" method="post">
+<form action="" method="post">
     <input type="submit" value="Eteindre">
 </form>
-<form action="?state=1" method="post">
+<form action="" method="post">
     <input type="submit" value="Allumer">
 </form>
 

@@ -12,13 +12,16 @@ include('view/header.php');
 $conn = new Database;
 
 $state = 0;
-
-if(isset($_GET["state"]))
+$delay = 0;
+if(isset($_POST))
 {
-    $state = $conn->changeState($_GET["state"]);
+    $state = $conn->changeState(1);
 }
 
+echo $_POST;
+
 $state = $conn->getState();
+//$delay = $conn->getDelay();
 
 include("view/home.php");
 
