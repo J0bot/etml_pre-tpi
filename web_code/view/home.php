@@ -8,16 +8,16 @@
 <?= $delay?>
 
 
-<form action="?state=0" method="POST">
+<form action="?state=0" method="GET">
     <input type="submit" value="Eteindre">
 </form>
-<form action="?state=1" method="POST">
+<form action="?state=1" method="GEt">
     <input type="submit" value="Allumer">
 </form>
 
 
 
-<form action="?delay" method="POST">
+<form action="?delay" method="GET">
     <input name="delay" type="textbox" value="1000">
     <input type="submit" value="Delay">
 
