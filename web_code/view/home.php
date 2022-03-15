@@ -5,11 +5,22 @@
 ?>
 <?= $state?>
 
-<form action="" method="post">
+<?= $delay?>
+
+
+<form action="?state=0" method="POST">
     <input type="submit" value="Eteindre">
 </form>
-<form action="" method="post">
+<form action="?state=1" method="POST">
     <input type="submit" value="Allumer">
+</form>
+
+
+
+<form action="?delay" method="POST">
+    <input name="delay" type="textbox" value="1000">
+    <input type="submit" value="Delay">
+
 </form>
 
 

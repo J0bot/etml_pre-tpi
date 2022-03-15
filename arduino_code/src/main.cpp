@@ -4,7 +4,8 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 
-
+#include <MySQL_Connection.h>
+#include <MySQL_Cursor.h>
 #include "secrets.h"
 
 
@@ -15,6 +16,29 @@ int status = WL_IDLE_STATUS;     // le status du wifi
 
 //Variable client de la classe WiFiClient
 WiFiClient client;
+
+
+//Tout ce qui concerne le mysql
+//IPAddress server_addr(192,168,1,36);  // IP of the MySQL *server* here
+IPAddress server_addr(172,16,0,7);  // IP of the MySQL *server* here
+char user[] = USER_MYSQL;              // MySQL user login username
+char password[] = PASS_MYSQL;        // MySQL user login password
+
+//L'objet conn de la classe mysql_connection fait référence à l'objet WifiClient
+MySQL_Connection conn((Client *)&client);
+
+
+//C'est la fonction qui nous permet d'executer une query
+void executeQuery(const char mysql_query[])
+{
+  //Initiate the query class instance
+  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
+  // Execute the query
+  cur_mem->execute(mysql_query);
+  // Note: since there are no results, we do not need to read any data
+  // Deleting the cursor also frees up memory used
+  delete cur_mem;
+}
 
 void setup()
 {
@@ -32,22 +56,43 @@ void setup()
     IPAddress ardIpAddress = WiFi.localIP();
     Serial.println(ardIpAddress);
 
-    char server[] = "172.16.0.55";
 
-    if (client.connect(server, 80)) {
+    Serial.print("Pinging ");
+    Serial.print("172.16.0.7");
+    Serial.print(": ");
+    int pingResult;
+    pingResult = WiFi.ping("172.16.0.7");
 
-        Serial.println("connected to server");
+    if (pingResult >= 0) {
+        Serial.print("SUCCESS! RTT = ");
+        Serial.print(pingResult);
+        Serial.println(" ms");
+    } else {
+        Serial.print("FAILED! Error code: ");
+        Serial.println(pingResult);
+    }
 
-        // Make a HTTP request:
+    delay(5000);
 
-        client.println("GET / HTTP/1.1");
+    //Connection to mysql database
+    Serial.println("Connecting...");
+    if (conn.connect(server_addr, 3306, user, password)) {
 
-        client.println("Host: SRV01");
+        //Petit delay de 1 secondes pour laisser le temps de se connecter
+        delay(1000);
+        Serial.println("Connection successful !");
+    
+        char queryTest[] = "UPDATE db_arduino.t_switch SET swiDelay=45 WHERE idSwitch=1";
+        executeQuery(queryTest);
 
-        client.println("Connection: close");
+        Serial.println(queryTest);
 
-        client.println();
-
+    }
+    else
+    {
+        // Si la connection a vraiment fail on va afficher qu'elle a fail
+        Serial.println("Connection failed.");
+        delay(5000);
     }
 
 }
@@ -69,31 +114,6 @@ void ledFadeInAndOut()
 void loop() {
 
     //ledFadeInAndOut();
-    // if there are incoming bytes available
-
-    // from the server, read them and print them:
-
-    while (client.available()) {
-
-        char c = client.read();
-
-        Serial.write(c);        
-    }
-
-    // if the server's disconnected, stop the client:
-
-    if (!client.connected()) {
-
-        Serial.println();
-
-        Serial.println("disconnecting from server.");
-
-        client.stop();
-
-        // do nothing forevermore:
-
-        while (true);
-
-    }
+    
 
 }

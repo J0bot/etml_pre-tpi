@@ -13,13 +13,19 @@ $conn = new Database;
 
 $state = 0;
 $delay = 0;
-if(isset($_POST))
+if(isset($_GET["state"]))
 {
-    $state = $conn->changeState(1);
+    $state = $conn->changeState($_GET["state"]);
+    
 }
 
-echo $_POST;
 
+if(isset($_GET["delay"]))
+{
+    $delay = $conn->setDelay($_POST["delay"]);
+}
+
+$delay = $conn->getDelay();
 $state = $conn->getState();
 //$delay = $conn->getDelay();
 

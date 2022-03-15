@@ -24,7 +24,7 @@
 
             //On va utiliser PDO pour parler avec la db, et pour ce faire il faut commencer par se connecter
             try{
-                $dsn = "mysql:host=" . $login["ip"] . ";dbname=" . $login["db"]. ";charset=utf8"; 
+                $dsn = "mysql:host=" . $login["ip"] . ";dbname=" . $login["db"]. ";"; 
                 $this->connector=new PDO($dsn,$login['user'],$login['pass']);
             
                 // Activer le mode exeption du pdo
@@ -129,6 +129,49 @@
             $this->queryPrepareExecute($query,$binds);
         }
 
+        public function getDelay()
+        {
+            $query = "SELECT swiDelay FROM t_switch WHERE idSwitch=1";
+            $dataArray = $this->querySimpleExecute($query);
+            return (int)($dataArray[0]["swiDelay"]);
+        }
+
+        public function changeDelay()
+        {
+            $delayData = $this->getDelay();
+            if($delayData > 0)
+            {
+                $value = $delayData - 1;
+                $query = "UPDATE t_switch SET swiDelay=:swiDelay WHERE idSwitch=1";
+                $binds = array (
+                    0 => array (
+                        'var' => $value,
+                        'marker' => ':swiDelay',
+                        'type'  => PDO::PARAM_INT
+                    )
+                );
+                $this->queryPrepareExecute($query,$binds);
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public function setDelay($value)
+        {
+            
+            $query = "UPDATE t_switch SET swiDelay=:swiDelay WHERE idSwitch=1";
+            $binds = array (
+                0 => array (
+                    'var' => (int)($value),
+                    'marker' => ':swiDelay',
+                    'type'  => PDO::PARAM_INT
+                )
+            );
+            $this->queryPrepareExecute($query,$binds);
+        }
 
         /**
          * Fonction de destructeur
