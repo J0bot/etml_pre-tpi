@@ -9,9 +9,13 @@
 
 
 <form action="?state=0" method="GET">
+    <input name="state" type="textbox" value="0">
+
     <input type="submit" value="Eteindre">
+    
 </form>
-<form action="?state=1" method="GEt">
+<form action="?state=1" method="GET">
+    <input name="state" type="textbox" value="1">
     <input type="submit" value="Allumer">
 </form>
 
