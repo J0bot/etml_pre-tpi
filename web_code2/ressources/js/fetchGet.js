@@ -43,7 +43,8 @@ async function setLed(led,intensity=255) {
     }
 }
 
-
+/*
 setLed(RED,document.getElementById("RED_LED").value);
 setLed(GREEN,document.getElementById("GREEN_LED").value);
 setLed(BLUE,document.getElementById("BLUE_LED").value );
+*/

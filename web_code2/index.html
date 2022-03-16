@@ -1,31 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="ressources/css/main.css" type="text/css" />
 
-<div>
-    <input type="range" id="RED_LED" name="RED_LED"
-            min="0" max="255">
-    <label for="RED_LED">RED</label>
+    <title>Led Control</title>
 
-</div>
+</head>
+<body>
+    
+    <div>
+        <h1>Manual Control</h1>
+    </div>
+    
+    <div>
+        <input type="range" id="RED_LED" name="RED_LED"
+        min="0" max="255">
+        <label for="RED_LED">RED</label>
+        
+    </div>
+    
+    <div>
+        <input type="range" id="GREEN_LED" name="GREEN_LED"
+        min="0" max="255">
+        <label for="GREEN_LED">GREEN</label>
+        
+    </div>
+    
+    <div>
+        <input type="range" id="BLUE_LED" name="BLUE_LED"
+        min="0" max="255">
+        <label for="BLUE_LED">BLUE</label>
+        
+    </div>
 
-<div>
-    <input type="range" id="GREEN_LED" name="GREEN_LED"
-            min="0" max="255">
-    <label for="GREEN_LED">GREEN</label>
+    
+    <script src="ressources/js/fetchGet.js"></script>
+    <script>
+        setLed(RED,document.getElementById("RED_LED").value);
+        setLed(GREEN,document.getElementById("GREEN_LED").value);
+        setLed(BLUE,document.getElementById("BLUE_LED").value );
+    </script>
+    
+    <br>
+    
+    <div>
+        <h3>Ways of controlling the leds : </h3>
 
-</div>
-
-<div>
-    <input type="range" id="BLUE_LED" name="BLUE_LED"
-            min="0" max="255">
-    <label for="BLUE_LED">BLUE</label>
-
-</div>
-
-<script src="./fetchGet.js"></script>
+        <a href="#">Manual Control</a>
+        <br>
+        <a href="spin">Wheel of fortune Control</a>
+        <br>
+        <a href="wheel">Wheel manual Control</a>
+    </div>
+ 
 
 
-
-
-<br>
 
 <!-- Write your comments here 
     <button onclick="setLed(RED,255)">Allumer RED</button> 
@@ -37,3 +67,5 @@
     <button onclick="setLed(BLUE,255)">Allumer BLUE</button> 
     <button onclick="setLed(BLUE,0)">Eteindre BLUE</button>
 -->
+</body>
+</html>

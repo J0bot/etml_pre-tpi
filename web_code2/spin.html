@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Led Control</title>
+    <link rel="stylesheet" href="ressources/css/main.css" type="text/css" />
+    <script src='ressources/js/Winwheel.js'></script>
+    <script src='ressources/js/fetchGet.js'></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+
+</head>
+<body>
+    
+   <div>
+    <h1>Wheel of Fortune Control</h1>
+
+   </div>
+    
+
+    <div >
+        <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td>
+                    <div class="power_controls">
+                        <br />
+                        <br />
+                       
+                        <br />
+                        <img id="spin_button" src="ressources/img/spin_on.png" alt="Spin" onClick="startSpin();" />
+                        <br /><br />
+                        &nbsp;&nbsp;<a href="#" onClick="resetWheel(); return false;">Play Again</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reset)
+                    </div>
+                </td>
+                <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                    <canvas id="canvas" width="434" height="434">
+                        <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                    </canvas>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        // Create new wheel object specifying the parameters at creation time.
+        let theWheel = new Winwheel({
+            'numSegments'  : 8,     // Specify number of segments.
+            'outerRadius'  : 212,   // Set outer radius so wheel fits inside the background.
+            'textFontSize' : 28,    // Set font size as desired.
+            'segments'     :        // Define segments including colour and text.
+            [
+               {'fillStyle' : '#eae56f', 'text' : 'YELLOW'},
+               {'fillStyle' : '#89f26e', 'text' : 'GREEN'},
+               {'fillStyle' : '#7de6ef', 'text' : 'BLUE'},
+               {'fillStyle' : '#e7706f', 'text' : 'RED'},
+               {'fillStyle' : '#eae56f', 'text' : 'YELLOW'},
+               {'fillStyle' : '#89f26e', 'text' : 'GREEN'},
+               {'fillStyle' : '#7de6ef', 'text' : 'BLUE'},
+               {'fillStyle' : '#e7706f', 'text' : 'RED'}
+            ],
+            'animation' :           // Specify the animation to use.
+            {
+                'type'     : 'spinToStop',
+                'duration' : 5,     // Duration in seconds.
+                'spins'    : 8,     // Number of complete spins.
+                'callbackFinished' : alertPrize
+            }
+        });
+
+        // Vars used by the code in this page to do power controls.
+        let wheelSpinning = false;
+
+        // -------------------------------------------------------
+        // Function to handle the onClick on the power buttons.
+        // -------------------------------------------------------
+        function powerSelected(powerLevel)
+        {
+            // Ensure that power can't be changed while wheel is spinning.
+            if (wheelSpinning == false) {
+            
+                // Light up the spin button by changing it's source image and adding a clickable class to it.
+                document.getElementById('spin_button').src = "ressources/img/spin_on.png";
+                document.getElementById('spin_button').className = "clickable";
+            }
+        }
+
+        // -------------------------------------------------------
+        // Click handler for spin button.
+        // -------------------------------------------------------
+        function startSpin()
+        {
+            // Ensure that spinning can't be clicked again while already running.
+            if (wheelSpinning == false) {
+                // Based on the power level selected adjust the number of spins for the wheel, the more times is has
+                // to rotate with the duration of the animation the quicker the wheel spins.
+
+                theWheel.animation.spins = 8;
+
+
+                // Disable the spin button so can't click again while wheel is spinning.
+                document.getElementById('spin_button').src       = "ressources/img/spin_off.png";
+                document.getElementById('spin_button').className = "";
+
+                // Begin the spin animation by calling startAnimation on the wheel object.
+                theWheel.startAnimation();
+
+                // Set to true so that power can't be changed and spin button re-enabled during
+                // the current animation. The user will have to reset before spinning again.
+                wheelSpinning = true;
+            }
+        }
+
+        // -------------------------------------------------------
+        // Function for reset button.
+        // -------------------------------------------------------
+        function resetWheel()
+        {
+            theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
+            theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
+            theWheel.draw();                // Call draw to render changes to the wheel.
+
+            wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+        }
+
+        // -------------------------------------------------------
+        // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters
+        // note the indicated segment is passed in as a parmeter as 99% of the time you will want to know this to inform the user of their prize.
+        // -------------------------------------------------------
+        function alertPrize(indicatedSegment)
+        {
+            
+            if(indicatedSegment.text == "RED")
+            {
+                setLed(BLUE,0);
+                setLed(GREEN,0);
+                setLed(RED,255);
+            } 
+            else if(indicatedSegment.text == "BLUE")
+            {
+                setLed(RED,0);
+                setLed(GREEN,0);
+                setLed(BLUE,255);
+            }
+            else if(indicatedSegment.text == "GREEN")
+            {
+                setLed(RED,0);
+                setLed(BLUE,0);
+                setLed(GREEN,255);
+            }
+            else if(indicatedSegment.text == "YELLOW")
+            {
+                setLed(BLUE,0);
+                setLed(GREEN,255);
+                setLed(RED,255);
+            }
+            
+            // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
+            alert("You have won " + indicatedSegment.text);
+
+        }
+    </script>
+
+    <div>
+        <h3>Ways of controlling the leds : </h3>
+
+        <a href="index.html">Manual Control</a>
+        <br>
+        <a href="spin">Wheel of fortune Control</a>
+        <br>
+        <a href="wheel">Wheel manual Control</a>
+    </div>
+
+</body>
+</html>
