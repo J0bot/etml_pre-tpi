@@ -23,7 +23,7 @@
 
 <form action="?delay" method="GET">
     <input name="delay" type="textbox" value="1000">
-    <input type="submit" value="Delay">
+    <input type="submit" value="Delay">     
 
 </form>
 
