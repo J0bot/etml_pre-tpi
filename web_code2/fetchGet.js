@@ -1,9 +1,36 @@
 const RED = 5;
 const GREEN = 4;
 const BLUE = 3;
-var RED_int ;
-var GREEN_int ;
-var BLUE_int ;
+
+
+var red_led = document.getElementById("RED_LED");
+red_led.onchange = function()
+{
+    var red_led_value = document.getElementById("RED_LED").value;
+    setLed(RED,red_led_value);
+    console.log("Red : " + red_led_value);
+}
+
+var green_led = document.getElementById("GREEN_LED");
+green_led.onchange = function()
+{
+    var green_led_value = document.getElementById("GREEN_LED").value;
+    setLed(GREEN,green_led_value);
+    console.log( "Green : "  + green_led_value);
+}
+
+var blue_led = document.getElementById("BLUE_LED");
+blue_led.onchange = function()
+{
+    var blue_led_value = document.getElementById("BLUE_LED").value;
+    setLed(BLUE,blue_led_value);
+    console.log("Blue : " + blue_led_value);
+}
+
+
+
+
+
 
 
 async function setLed(led,intensity=255) {
@@ -15,8 +42,8 @@ async function setLed(led,intensity=255) {
         console.log(error);
     }
 }
-/*
-setLed(RED,RED_int);
-setLed(GREEN,GREEN_int);
-setLed(BLUE,BLUE_int);
-*/
+
+
+setLed(RED,document.getElementById("RED_LED").value);
+setLed(GREEN,document.getElementById("GREEN_LED").value);
+setLed(BLUE,document.getElementById("BLUE_LED").value );
