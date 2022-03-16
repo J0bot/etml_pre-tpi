@@ -15,7 +15,7 @@ int keyIndex = 0;                 // your network key Index number (needed only 
 int status = WL_IDLE_STATUS;
 
 WiFiServer restServer(80);
-
+    
 // Custom function accessible by the API
 int ledControl(String command) {
 
@@ -29,7 +29,7 @@ int ledControl(String command) {
 
     delay(state);
 
-    
+
     return 1;
 }
 
