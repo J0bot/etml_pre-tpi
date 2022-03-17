@@ -27,21 +27,30 @@ blue_led.onchange = function()
     console.log("Blue : " + blue_led_value);
 }
 
-
-
-
-
-
-
 async function setLed(led,intensity=255) {
     let url = "http://172.16.0.5/analog/"+ led + "/" + intensity;
     try {
         let res = await fetch(url);
+
         return await res.json();
     } catch (error) {
         console.log(error);
     }
 }
+
+
+function getButton(button) {
+    const url = "http://172.16.0.5/digital/"+ button;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.return_value);
+            document.getElementById("button1_info").value = parseInt(data.return_value);
+            return parseInt(data.return_value);
+        })
+        .catch(console.error)
+}
+
 
 /*
 setLed(RED,document.getElementById("RED_LED").value);

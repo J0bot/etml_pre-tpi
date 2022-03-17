@@ -5,6 +5,10 @@
 
 #include <aREST.h>
 
+#define RED 5
+#define GREEN 4
+#define BLUE  3
+
 // Create aREST instance
 aREST rest = aREST();
 
@@ -15,7 +19,7 @@ int keyIndex = 0;                 // your network key Index number (needed only 
 int status = WL_IDLE_STATUS;
 
 WiFiServer restServer(80);
-    
+
 // Custom function accessible by the API
 int ledControl(String command) {
 
@@ -58,15 +62,19 @@ void printWifiStatus() {
     Serial.println(" dBm");
 }
 
+int red_led; //pin 5
 
 void setup(void)
 {
 
     pinMode(6,OUTPUT);
     pinMode(7,OUTPUT);
+    pinMode(1,INPUT);
 
     // Function to be exposed
     rest.function("led",ledControl);
+
+    rest.variable("red_led",&red_led);
 
     // Give name and ID to device
     rest.set_id("008");
@@ -112,6 +120,8 @@ void setup(void)
 
 void loop() {
 
+    float r = analogRead(RED);
+    red_led = (int)r;
     // Handle REST calls
     WiFiClient client = restServer.available();
     rest.handle(client);
