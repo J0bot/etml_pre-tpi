@@ -8,8 +8,8 @@
 #define RED 5
 #define GREEN 4
 #define BLUE  3
-#define echoPin 7
-#define trigPin 6
+#define echoPin 6 
+#define trigPin 7
 
 // Create aREST instance
 aREST rest = aREST();
@@ -42,18 +42,6 @@ int ledControl(String command) {
 
     return 1;
 }
-
-int startMotor(String command){
-    digitalWrite(0,HIGH);
-    return 0;
-}
-
-int stopMotor(String command){
-    digitalWrite(0,LOW);
-    return 0;
-}
-
-
 
 int getDistance(String command){
     // Clears the trigPin condition
@@ -106,7 +94,8 @@ void printWifiStatus() {
 void setup(void)
 {
 
-    pinMode(0,OUTPUT);
+    pinMode(6,OUTPUT);
+    pinMode(7,OUTPUT);
     pinMode(1,INPUT);
 
     pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
@@ -115,8 +104,7 @@ void setup(void)
     // Function to be exposed
     rest.function("led",ledControl);
     rest.function("distance",getDistance);
-    rest.function("start_motor",startMotor);
-    rest.function("stop_motor",stopMotor);
+
     // Give name and ID to device
     rest.set_id("008");
     rest.set_name("arduinou");
@@ -160,6 +148,22 @@ void setup(void)
 }
 
 void loop() {
+
+    // Clears the trigPin condition
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    // Reads the echoPin, returns the sound wave travel time in microseconds
+    duration = pulseIn(echoPin, HIGH);
+    // Calculating the distance
+    distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+    // Displays the distance on the Serial Monitor
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
 
     // Handle REST calls
     WiFiClient client = restServer.available();

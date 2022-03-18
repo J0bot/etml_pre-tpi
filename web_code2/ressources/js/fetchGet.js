@@ -51,6 +51,34 @@ function getButton(button) {
         .catch(console.error)
 }
 
+async function callFunction(func)
+{
+    const url = "http://172.16.0.5/"+ func;
+    try {
+        await fetch(url);
+        
+        return await 0;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function callFunction2(func)
+{
+    const url = "http://172.16.0.5/"+ func;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.return_value);
+            document.getElementById("func2").value = parseInt(data.return_value);
+
+            return parseInt(data.return_value);
+        })
+        .catch(console.error)
+}
+
+
+
 
 /*
 setLed(RED,document.getElementById("RED_LED").value);
