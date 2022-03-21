@@ -15,6 +15,22 @@
 long duration; // variable for the duration of sound wave travel
 int distance; // variable for the distance measurement
 
+int getDuration()
+{
+  // Clears the trigPin condition
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    // Reads the echoPin, returns the sound wave travel time in microseconds
+    duration = pulseIn(echoPin, HIGH);
+    Serial.print("Duration : ");
+    Serial.println(duration);
+    return duration;
+    
+}
 
 void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
@@ -30,20 +46,14 @@ void setup() {
 
 }
 void loop() {
-   // Clears the trigPin condition
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
+
+  duration = getDuration();
   // Calculating the distance
   distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
   // Displays the distance on the Serial Monitor
   Serial.print("Distance: ");
-  Serial.print(duration);
+  Serial.print(distance);
   Serial.println(" cm");
+  analogWrite(2,duration/10);
   delay(1000);
 }
